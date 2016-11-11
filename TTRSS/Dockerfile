@@ -2,8 +2,8 @@ FROM ubuntu
 MAINTAINER Samir L. Boulema <sboulema@gmail.com>
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
-  nginx supervisor php7-fpm php7-cli php7-curl php7-gd php7-json \
-  php7-pgsql php7-mysql php7-mcrypt && apt-get clean && rm -rf /var/lib/apt/lists/*
+  nginx supervisor php7.0-fpm php7.0-cli php7.0-curl php7.0-gd php7.0-json \
+  php7.0-pgsql php7.0-mysql php7.0-mcrypt && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # enable the mcrypt module
 RUN php7enmod mcrypt
