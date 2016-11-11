@@ -3,7 +3,7 @@ MAINTAINER Samir L. Boulema <sboulema@gmail.com>
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
   nginx supervisor php7.0-fpm php7.0-cli php7.0-curl php7.0-gd php7.0-json \
-  php7.0-pgsql php7.0-mysql php7.0-mcrypt && apt-get clean && rm -rf /var/lib/apt/lists/*
+  php7.0-pgsql php7.0-mysql php7.0-mcrypt && apt-get clean && rm -rf /var/lib/apt/lists/* && mkdir -p /var/run/php
 
 # enable the mcrypt module
 RUN phpenmod -v 7.0 mcrypt
