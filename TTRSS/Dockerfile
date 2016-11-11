@@ -2,11 +2,11 @@ FROM ubuntu
 MAINTAINER Samir L. Boulema <sboulema@gmail.com>
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
-  nginx supervisor php5-fpm php5-cli php5-curl php5-gd php5-json \
-  php5-pgsql php5-mysql php5-mcrypt && apt-get clean && rm -rf /var/lib/apt/lists/*
+  nginx supervisor php7-fpm php7-cli php7-curl php7-gd php7-json \
+  php7-pgsql php7-mysql php7-mcrypt && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # enable the mcrypt module
-RUN php5enmod mcrypt
+RUN php7enmod mcrypt
 
 # add ttrss as the only nginx site
 ADD ttrss.nginx.conf /etc/nginx/sites-available/ttrss
