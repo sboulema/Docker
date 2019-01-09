@@ -44,6 +44,13 @@ ENV DB_NAME ttrss
 ENV DB_USER ttrss
 ENV DB_PASS ttrss
 
+# set permissions on directories
+RUN chmod -R 777 cache/images && \
+    chmod -R 777 cache/upload && \
+    chmod -R 777 cache/export && \
+    chmod -R 777 feed-icons   && \
+    chmod -R 777 lock
+
 # always re-configure database with current ENV when RUNning container, then monitor all services
 ADD configure-db.php /configure-db.php
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
