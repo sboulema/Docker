@@ -3,6 +3,8 @@ LABEL maintainer="sboulema@gmail.com"
 
 ARG PHP_VERSION=7.3
 
+RUN useradd ttrss
+
 # add PHP repository
 RUN DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
