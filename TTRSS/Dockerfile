@@ -1,13 +1,15 @@
 FROM ubuntu
-MAINTAINER Samir L. Boulema <sboulema@gmail.com>
+LABEL maintainer="sboulema@gmail.com"
+
+ARG PHP_VERSION=7.3
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
-  nginx supervisor php7.0-fpm php7.0-cli php7.0-curl php7.0-gd php7.0-json \
-  php7.0-pgsql php7.0-mysql php7.0-mcrypt php7.0-mbstring php7.0-xml \
+  nginx supervisor php${PHP_VERSION}-fpm php${PHP_VERSION}-cli php${PHP_VERSION}-curl php${PHP_VERSION}-gd php${PHP_VERSION}-json \
+  php${PHP_VERSION}-pgsql php${PHP_VERSION}-mysql php${PHP_VERSION}-mbstring php${PHP_VERSION}-xml \
   && apt-get clean && rm -rf /var/lib/apt/lists/* && mkdir -p /var/run/php
 
-# enable the mcrypt, mbstring modules
-RUN phpenmod -v 7.0 mcrypt && phpenmod -v 7.0 mbstring && phpenmod -v 7.0 xml
+# enable mbstring modules
+RUN phpenmod -v ${PHP_VERSION} mbstring && phpenmod -v ${PHP_VERSION} xml
 
 # add ttrss as the only nginx site
 ADD ttrss.nginx.conf /etc/nginx/sites-available/ttrss
