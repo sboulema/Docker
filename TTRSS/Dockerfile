@@ -4,8 +4,9 @@ LABEL maintainer="sboulema@gmail.com"
 ARG PHP_VERSION=7.3
 
 # add PHP repository
-RUN apt-get update && \
-  apt-get install software-properties-common && \
+RUN DEBIAN_FRONTEND=noninteractive && \
+  apt-get update && \
+  apt-get install -y software-properties-common && \
   add-apt-repository ppa:ondrej/php
 
 # install PHP and extensions
