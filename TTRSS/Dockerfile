@@ -22,6 +22,7 @@ RUN phpenmod -v ${PHP_VERSION} mbstring && phpenmod -v ${PHP_VERSION} xml
 
 # add ttrss as the only nginx site
 ADD ttrss.nginx.conf /etc/nginx/sites-available/ttrss
+RUN sed -i "s/PHP_VERSION/${PHP_VERSION}/" /etc/nginx/sites-available/ttrss
 RUN ln -s /etc/nginx/sites-available/ttrss /etc/nginx/sites-enabled/ttrss
 RUN rm /etc/nginx/sites-enabled/default
 
