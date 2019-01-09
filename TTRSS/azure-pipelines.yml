@@ -12,6 +12,7 @@ steps:
     dockerRegistryEndpoint: 'Docker Hub'
     imageName: sboulema/ttrss
     includeLatestTag: true
+    dockerFile: TTRSS/Dockerfile
 
 - task: Docker@1
   displayName: 'Push an image'
