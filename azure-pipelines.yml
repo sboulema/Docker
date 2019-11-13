@@ -26,5 +26,5 @@ stages:
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/RabbitMQ-Alert/Dockerfile'
         tags: |
-          $(Build.BuildId)
-          latest'
+          $(Build.BuildNumber)
+          latest
