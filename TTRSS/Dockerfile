@@ -13,7 +13,7 @@ RUN DEBIAN_FRONTEND=noninteractive && \
 
 # install PHP and extensions
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
-  nginx supervisor php${PHP_VERSION}-fpm php${PHP_VERSION}-cli php${PHP_VERSION}-curl php${PHP_VERSION}-gd php${PHP_VERSION}-json \
+  git nginx supervisor php${PHP_VERSION}-fpm php${PHP_VERSION}-cli php${PHP_VERSION}-curl php${PHP_VERSION}-gd php${PHP_VERSION}-json \
   php${PHP_VERSION}-pgsql php${PHP_VERSION}-mysql php${PHP_VERSION}-mbstring php${PHP_VERSION}-xml php${PHP_VERSION}-intl \
   && apt-get clean && rm -rf /var/lib/apt/lists/* && mkdir -p /var/run/php
 
