@@ -28,6 +28,7 @@ RUN rm /etc/nginx/sites-enabled/default
 
 # install ttrss
 WORKDIR /var/www
+RUN rm -rf *
 RUN git clone https://git.tt-rss.org/fox/tt-rss.git .
 
 # RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y curl --no-install-recommends && rm -rf /var/lib/apt/lists/* \
