@@ -2,17 +2,17 @@ FROM ubuntu
 LABEL maintainer="sboulema@gmail.com"
 
 ENV PHP_VERSION=7.3
+ENV DEBIAN_FRONTEND=noninteractive 
 
 RUN useradd ttrss
 
 # add PHP repository
-RUN DEBIAN_FRONTEND=noninteractive && \
-  apt-get update && \
+RUN apt-get update && \
   apt-get install -y software-properties-common && \
   add-apt-repository ppa:ondrej/php
 
 # install PHP and extensions
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y \
   git nginx supervisor php${PHP_VERSION}-fpm php${PHP_VERSION}-cli php${PHP_VERSION}-curl php${PHP_VERSION}-gd php${PHP_VERSION}-json \
   php${PHP_VERSION}-pgsql php${PHP_VERSION}-mysql php${PHP_VERSION}-mbstring php${PHP_VERSION}-xml php${PHP_VERSION}-intl \
   && apt-get clean && rm -rf /var/lib/apt/lists/* && mkdir -p /var/run/php
