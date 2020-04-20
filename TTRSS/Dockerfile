@@ -26,13 +26,18 @@ RUN sed -i "s/PHP_VERSION/${PHP_VERSION}/" /etc/nginx/sites-available/ttrss
 RUN ln -s /etc/nginx/sites-available/ttrss /etc/nginx/sites-enabled/ttrss
 RUN rm /etc/nginx/sites-enabled/default
 
-# install ttrss and patch configuration
+# install ttrss
 WORKDIR /var/www
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y curl --no-install-recommends && rm -rf /var/lib/apt/lists/* \
-    && curl -SL https://git.tt-rss.org/git/tt-rss/archive/master.tar.gz | tar xzC /var/www --strip-components 1 \
+    && curl -SL https://git.tt-rss.org/fox/tt-rss/archive/master.tar.gz | tar xzC /var/www --strip-components 1 \
     && apt-get purge -y --auto-remove curl \
     && chown www-data:www-data -R /var/www
+
+# patch configuration
 RUN cp config.php-dist config.php
+
+ENV SESSION_COOKIE_LIFETIME 86400
+RUN sed -i "s/define('SESSION_COOKIE_LIFETIME', 86400);/define('SESSION_COOKIE_LIFETIME', ${SESSION_COOKIE_LIFETIME});/" config.php
 
 # expose only nginx HTTP port
 EXPOSE 80
