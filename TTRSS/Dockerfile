@@ -1,7 +1,7 @@
 FROM ubuntu
 LABEL maintainer="sboulema@gmail.com"
 
-ARG PHP_VERSION=7.3
+ENV PHP_VERSION=7.3
 
 RUN useradd ttrss
 
@@ -28,15 +28,17 @@ RUN rm /etc/nginx/sites-enabled/default
 
 # install ttrss
 WORKDIR /var/www
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y curl --no-install-recommends && rm -rf /var/lib/apt/lists/* \
-    && curl -SL https://git.tt-rss.org/fox/tt-rss/archive/master.tar.gz | tar xzC /var/www --strip-components 1 \
-    && apt-get purge -y --auto-remove curl \
-    && chown www-data:www-data -R /var/www
+RUN git clone https://git.tt-rss.org/fox/tt-rss.git .
+
+# RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y curl --no-install-recommends && rm -rf /var/lib/apt/lists/* \
+#     && curl -SL https://git.tt-rss.org/fox/tt-rss/archive/master.tar.gz | tar xzC /var/www --strip-components 1 \
+#     && apt-get purge -y --auto-remove curl \
+#     && chown www-data:www-data -R /var/www
 
 # patch configuration
 RUN cp config.php-dist config.php
 
-ENV SESSION_COOKIE_LIFETIME 86400
+ENV SESSION_COOKIE_LIFETIME 86400000
 RUN sed -i "s/define('SESSION_COOKIE_LIFETIME', 86400);/define('SESSION_COOKIE_LIFETIME', ${SESSION_COOKIE_LIFETIME});/" config.php
 
 # expose only nginx HTTP port
@@ -51,7 +53,8 @@ ENV DB_USER ttrss
 ENV DB_PASS ttrss
 
 # set permissions on directories
-RUN chmod -R 777 cache/images && \
+RUN chown www-data:www-data -R /var/www && \ 
+    chmod -R 777 cache/images && \
     chmod -R 777 cache/upload && \
     chmod -R 777 cache/export && \
     chmod -R 777 feed-icons   && \
