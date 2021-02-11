@@ -50,6 +50,7 @@ ENV TTRSS_ICONS_DIR="feed-icons"
 ENV TTRSS_LOCK_DIRECTORY="lock"
 ENV TTRSS_PLUGINS="auth_internal"
 ENV TTRSS_CONFIG_VERSION="26"
+ENV TTRSS_PHP_EXECUTABLE="/usr/bin/php${PHP_VERSION}"
 
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \ 
