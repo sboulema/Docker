@@ -128,8 +128,8 @@ function dbconnect($config)
     $map = array('host' => 'HOST', 'port' => 'PORT', 'dbname' => 'NAME');
     $dsn = $config['TTRSS_DB_TYPE'] . ':';
     foreach ($map as $d => $h) {
-        if (isset($config['DB_' . $h])) {
-            $dsn .= $d . '=' . $config['DB_' . $h] . ';';
+        if (isset($config['TTRSS_DB_' . $h])) {
+            $dsn .= $d . '=' . $config['TTRSS_DB_' . $h] . ';';
         }
     }
     $pdo = new \PDO($dsn, $config['TTRSS_DB_USER'], $config['TTRSS_DB_PASS']);
