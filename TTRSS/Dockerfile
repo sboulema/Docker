@@ -24,7 +24,8 @@ RUN apt-get update && apt-get install -y \
 # enable PHP modules
 RUN phpenmod -v ${PHP_VERSION} mbstring && \
     phpenmod -v ${PHP_VERSION} xml && \
-    phpenmod -v ${PHP_VERSION} pdo_pgsql
+    phpenmod -v ${PHP_VERSION} pdo_pgsql && \
+    phpenmod -v ${PHP_VERSION} posix
 
 # add ttrss as the only nginx site
 ADD ttrss.nginx.conf /etc/nginx/sites-available/ttrss
