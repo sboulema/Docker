@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
   php${PHP_VERSION}-intl php${PHP_VERSION}-xml php${PHP_VERSION}-curl \
   php${PHP_VERSION}-dom php${PHP_VERSION}-fileinfo php${PHP_VERSION}-iconv \
   php${PHP_VERSION}-posix php${PHP_VERSION}-zip \
+  php${PHP_VERSION}-cli php${PHP_VERSION}-common
   git nginx supervisor \
   && apt-get clean && rm -rf /var/lib/apt/lists/* && mkdir -p /var/run/php
 
@@ -41,9 +42,6 @@ RUN git clone https://git.tt-rss.org/fox/tt-rss.git .
 # expose only nginx HTTP port
 EXPOSE 80
 
-# set configuration to look at Docker ENV variables
-ADD config.docker.php config.php
-
 # set default settings
 ENV TTRSS_SELF_URL_PATH="http://localhost"
 ENV TTRSS_DB_NAME="ttrss"
@@ -59,6 +57,13 @@ ENV TTRSS_PLUGINS="auth_internal"
 ENV TTRSS_CONFIG_VERSION="26"
 ENV TTRSS_PHP_EXECUTABLE="/usr/bin/php${PHP_VERSION}"
 ENV TTRSS_LOG_DESTINATION="sql"
+
+# set configuration to look at Docker ENV variables
+# ADD config.docker.php config.php
+
+# patch configuration
+RUN cp config.php-dist config.php
+RUN sed -i "s/define('SESSION_COOKIE_LIFETIME', 86400);/define('SESSION_COOKIE_LIFETIME', ${TTRSS_SESSION_COOKIE_LIFETIME});/" config.php
 
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \ 
