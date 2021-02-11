@@ -39,7 +39,8 @@ ENV TTRSS_SELF_URL_PATH http://localhost
 ENV TTRSS_DB_NAME ttrss
 ENV TTRSS_DB_USER ttrss
 ENV TTRSS_DB_PASS ttrss
-ENV SESSION_COOKIE_LIFETIME 86400000
+ENV TTRSS_SESSION_COOKIE_LIFETIME 86400000
+ENV DB_TYPE pgsql
 
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \ 
