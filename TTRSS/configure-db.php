@@ -49,8 +49,8 @@ if (!empty($eport)) {
 //   database user (DB_USER) can be supplied or defaults to database name
 //   database pass (DB_PASS) can be supplied or defaults to database user
 $config['TTRSS_DB_NAME'] = env('TTRSS_DB_NAME', 'ttrss');
-$config['TTRSS_DB_USER'] = env('TTRSS_DB_USER', $config['DB_NAME']);
-$config['TTRSS_DB_PASS'] = env('TTRSS_DB_PASS', $config['DB_USER']);
+$config['TTRSS_DB_USER'] = env('TTRSS_DB_USER', $config['TTRSS_DB_NAME']);
+$config['TTRSS_DB_PASS'] = env('TTRSS_DB_PASS', $config['TTRSS_DB_USER']);
 
 if (!dbcheck($config)) {
     echo 'Database login failed, trying to create...' . PHP_EOL;
@@ -62,7 +62,7 @@ if (!dbcheck($config)) {
 
     $super['TTRSS_DB_NAME'] = null;
     $super['TTRSS_DB_USER'] = env('TTRSS_DB_ENV_USER', 'docker');
-    $super['TTRSS_DB_PASS'] = env('TTRSS_DB_ENV_PASS', $super['DB_USER']);
+    $super['TTRSS_DB_PASS'] = env('TTRSS_DB_ENV_PASS', $super['TTRSS_DB_USER']);
     
     $pdo = dbconnect($super);
 
