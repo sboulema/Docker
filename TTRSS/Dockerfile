@@ -1,7 +1,7 @@
 FROM ubuntu
 LABEL maintainer="sboulema@gmail.com"
 
-ENV PHP_VERSION=7.3
+ENV PHP_VERSION=8.0
 ENV DEBIAN_FRONTEND=noninteractive 
 
 RUN useradd ttrss
@@ -31,22 +31,15 @@ WORKDIR /var/www
 RUN rm -rf *
 RUN git clone https://git.tt-rss.org/fox/tt-rss.git .
 
-# patch configuration
-RUN cp config.php-dist config.php
-
-ENV SESSION_COOKIE_LIFETIME 86400000
-RUN sed -i "s/define('SESSION_COOKIE_LIFETIME', 86400);/define('SESSION_COOKIE_LIFETIME', ${SESSION_COOKIE_LIFETIME});/" config.php
-
 # expose only nginx HTTP port
 EXPOSE 80
 
-# complete path to ttrss
-ENV SELF_URL_PATH http://localhost
-
-# expose default database credentials via ENV in order to ease overwriting
-ENV DB_NAME ttrss
-ENV DB_USER ttrss
-ENV DB_PASS ttrss
+# set default settings
+ENV TTRSS_SELF_URL_PATH http://localhost
+ENV TTRSS_DB_NAME ttrss
+ENV TTRSS_DB_USER ttrss
+ENV TTRSS_DB_PASS ttrss
+ENV SESSION_COOKIE_LIFETIME 86400000
 
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \ 
