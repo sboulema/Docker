@@ -6,40 +6,40 @@ $confpath = '/var/www/config.php';
 $config = array();
 
 // path to ttrss
-$config['SELF_URL_PATH'] = env('SELF_URL_PATH', 'http://localhost');
+$config['TTRSS_SELF_URL_PATH'] = env('TTRSS_SELF_URL_PATH', 'http://localhost');
 
-if (getenv('DB_TYPE') !== false) {
-    $config['DB_TYPE'] = getenv('DB_TYPE');
-} elseif (getenv('DB_PORT_5432_TCP_ADDR') !== false) {
+if (getenv('TTRSS_DB_TYPE') !== false) {
+    $config['TTRSS_DB_TYPE'] = getenv('TTRSS_DB_TYPE');
+} elseif (getenv('TTRSS_DB_PORT_5432_TCP_ADDR') !== false) {
     // postgres container linked
-    $config['DB_TYPE'] = 'pgsql';
+    $config['TTRSS_DB_TYPE'] = 'pgsql';
     $eport = 5432;
-} elseif (getenv('DB_PORT_3306_TCP_ADDR') !== false) {
+} elseif (getenv('TTRSS_DB_PORT_3306_TCP_ADDR') !== false) {
     // mysql container linked
-    $config['DB_TYPE'] = 'mysql';
+    $config['TTRSS_DB_TYPE'] = 'mysql';
     $eport = 3306;
 }
 
 if (!empty($eport)) {
-    $config['DB_HOST'] = env('DB_PORT_' . $eport . '_TCP_ADDR');
-    $config['DB_PORT'] = env('DB_PORT_' . $eport . '_TCP_PORT');
-} elseif (getenv('DB_PORT') === false) {
-    error('The env DB_PORT does not exist. Make sure to run with "--link mypostgresinstance:DB"');
-} elseif (is_numeric(getenv('DB_PORT')) && getenv('DB_HOST') !== false) {
-    // numeric DB_PORT provided; assume port number passed directly
-    $config['DB_HOST'] = env('DB_HOST');
-    $config['DB_PORT'] = env('DB_PORT');
+    $config['TTRSS_DB_HOST'] = env('TTRSS_DB_PORT_' . $eport . '_TCP_ADDR');
+    $config['TTRSS_DB_PORT'] = env('TTRSS_DB_PORT_' . $eport . '_TCP_PORT');
+} elseif (getenv('TTRSS_DB_PORT') === false) {
+    error('The env TTRSS_DB_PORT does not exist. Make sure to run with "--link mypostgresinstance:DB"');
+} elseif (is_numeric(getenv('TTRSS_DB_PORT')) && getenv('TTRSS_DB_HOST') !== false) {
+    // numeric TTRSS_DB_PORT provided; assume port number passed directly
+    $config['TTRSS_DB_HOST'] = env('TTRSS_DB_HOST');
+    $config['TTRSS_DB_PORT'] = env('TTRSS_DB_PORT');
 
-    if (empty($config['DB_TYPE'])) {
-        switch ($config['DB_PORT']) {
+    if (empty($config['TTRSS_DB_TYPE'])) {
+        switch ($config['TTRSS_DB_PORT']) {
             case 3306:
-                $config['DB_TYPE'] = 'mysql';
+                $config['TTRSS_DB_TYPE'] = 'mysql';
                 break;
             case 5432:
-                $config['DB_TYPE'] = 'pgsql';
+                $config['TTRSS_DB_TYPE'] = 'pgsql';
                 break;
             default:
-                error('Database on non-standard port ' . $config['DB_PORT'] . ' and env DB_TYPE not present');
+                error('Database on non-standard port ' . $config['TTRSS_DB_PORT'] . ' and env TTRSS_DB_TYPE not present');
         }
     }
 }
@@ -48,9 +48,9 @@ if (!empty($eport)) {
 //   database name (DB_NAME) can be supplied or detaults to "ttrss"
 //   database user (DB_USER) can be supplied or defaults to database name
 //   database pass (DB_PASS) can be supplied or defaults to database user
-$config['DB_NAME'] = env('DB_NAME', 'ttrss');
-$config['DB_USER'] = env('DB_USER', $config['DB_NAME']);
-$config['DB_PASS'] = env('DB_PASS', $config['DB_USER']);
+$config['TTRSS_DB_NAME'] = env('TTRSS_DB_NAME', 'ttrss');
+$config['TTRSS_DB_USER'] = env('TTRSS_DB_USER', $config['DB_NAME']);
+$config['TTRSS_DB_PASS'] = env('TTRSS_DB_PASS', $config['DB_USER']);
 
 if (!dbcheck($config)) {
     echo 'Database login failed, trying to create...' . PHP_EOL;
@@ -60,18 +60,18 @@ if (!dbcheck($config)) {
 
     $super = $config;
 
-    $super['DB_NAME'] = null;
-    $super['DB_USER'] = env('DB_ENV_USER', 'docker');
-    $super['DB_PASS'] = env('DB_ENV_PASS', $super['DB_USER']);
+    $super['TTRSS_DB_NAME'] = null;
+    $super['TTRSS_DB_USER'] = env('TTRSS_DB_ENV_USER', 'docker');
+    $super['TTRSS_DB_PASS'] = env('TTRSS_DB_ENV_PASS', $super['DB_USER']);
     
     $pdo = dbconnect($super);
 
-    if ($super['DB_TYPE'] === 'mysql') {
-        $pdo->exec('CREATE DATABASE ' . ($config['DB_NAME']));
-        $pdo->exec('GRANT ALL PRIVILEGES ON ' . ($config['DB_NAME']) . '.* TO ' . $pdo->quote($config['DB_USER']) . '@"%" IDENTIFIED BY ' . $pdo->quote($config['DB_PASS']));
+    if ($super['TTRSS_DB_TYPE'] === 'mysql') {
+        $pdo->exec('CREATE DATABASE ' . ($config['TTRSS_DB_NAME']));
+        $pdo->exec('GRANT ALL PRIVILEGES ON ' . ($config['TTRSS_DB_NAME']) . '.* TO ' . $pdo->quote($config['TTRSS_DB_USER']) . '@"%" IDENTIFIED BY ' . $pdo->quote($config['TTRSS_DB_PASS']));
     } else {
-        $pdo->exec('CREATE ROLE ' . ($config['DB_USER']) . ' WITH LOGIN PASSWORD ' . $pdo->quote($config['DB_PASS']));
-        $pdo->exec('CREATE DATABASE ' . ($config['DB_NAME']) . ' WITH OWNER ' . ($config['DB_USER']));
+        $pdo->exec('CREATE ROLE ' . ($config['TTRSS_DB_USER']) . ' WITH LOGIN PASSWORD ' . $pdo->quote($config['TTRSS_DB_PASS']));
+        $pdo->exec('CREATE DATABASE ' . ($config['TTRSS_DB_NAME']) . ' WITH OWNER ' . ($config['TTRSS_DB_USER']));
     }
 
     unset($pdo);
@@ -90,7 +90,7 @@ try {
 }
 catch (PDOException $e) {
     echo 'Database table not found, applying schema... ' . PHP_EOL;
-    $schema = file_get_contents('schema/ttrss_schema_' . $config['DB_TYPE'] . '.sql');
+    $schema = file_get_contents('schema/ttrss_schema_' . $config['TTRSS_DB_TYPE'] . '.sql');
     $schema = preg_replace('/--(.*?);/', '', $schema);
     $schema = preg_replace('/[\r\n]/', ' ', $schema);
     $schema = trim($schema, ' ;');
@@ -126,13 +126,13 @@ function error($text)
 function dbconnect($config)
 {
     $map = array('host' => 'HOST', 'port' => 'PORT', 'dbname' => 'NAME');
-    $dsn = $config['DB_TYPE'] . ':';
+    $dsn = $config['TTRSS_DB_TYPE'] . ':';
     foreach ($map as $d => $h) {
         if (isset($config['DB_' . $h])) {
             $dsn .= $d . '=' . $config['DB_' . $h] . ';';
         }
     }
-    $pdo = new \PDO($dsn, $config['DB_USER'], $config['DB_PASS']);
+    $pdo = new \PDO($dsn, $config['TTRSS_DB_USER'], $config['TTRSS_DB_PASS']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $pdo;
 }
