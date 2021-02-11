@@ -43,13 +43,17 @@ ENV TTRSS_DB_NAME ttrss
 ENV TTRSS_DB_USER ttrss
 ENV TTRSS_DB_PASS ttrss
 ENV TTRSS_SESSION_COOKIE_LIFETIME 86400000
+ENV TTRSS_ICONS_DIR feed-icons
+ENV TTRSS_LOCK_DIRECTORY 
+ENV TTRSS_PLUGINS auth_internal
+ENV TTRSS_CONFIG_VERSION 26
 
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \ 
-    chmod -R 777 cache/images && \
-    chmod -R 777 cache/upload && \
-    chmod -R 777 cache/export && \
-    chmod -R 777 feed-icons   && \
+    chmod -R 777 images && \
+    chmod -R 777 upload && \
+    chmod -R 777 export && \
+    chmod -R 777 feed-icons && \
     chmod -R 777 lock
 
 # always re-configure database with current ENV when RUNning container, then monitor all services
