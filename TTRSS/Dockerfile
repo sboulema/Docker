@@ -63,6 +63,7 @@ ENV TTRSS_LOG_DESTINATION="sql"
 # patch configuration
 RUN cp config.php-dist config.php
 RUN sed -i "s/define('SESSION_COOKIE_LIFETIME', 86400);/define('SESSION_COOKIE_LIFETIME', ${TTRSS_SESSION_COOKIE_LIFETIME});/" config.php
+RUN sed -i "s/define('SELF_URL_PATH', '%SELF_URL_PATH');/define('SELF_URL_PATH', ${TTRSS_SELF_URL_PATH});/" config.php
 
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \ 
