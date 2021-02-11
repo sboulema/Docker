@@ -17,11 +17,11 @@ RUN apt-get update && apt-get install -y \
   php${PHP_VERSION}-pdo php${PHP_VERSION}-gd php${PHP_VERSION}-pgsql php${PHP_VERSION}-mbstring \
   php${PHP_VERSION}-intl php${PHP_VERSION}-xml php${PHP_VERSION}-curl \
   php${PHP_VERSION}-dom php${PHP_VERSION}-fileinfo php${PHP_VERSION}-iconv \
-  php${PHP_VERSION}-posix php${PHP_VERSION}-zip php${PHP_VERSION}-openssl \
+  php${PHP_VERSION}-posix php${PHP_VERSION}-zip \
   git nginx supervisor \
   && apt-get clean && rm -rf /var/lib/apt/lists/* && mkdir -p /var/run/php
 
-# enable mbstring modules
+# enable PHP modules
 RUN phpenmod -v ${PHP_VERSION} mbstring && \
     phpenmod -v ${PHP_VERSION} xml && \
     phpenmod -v ${PHP_VERSION} pdo_pgsql && \
