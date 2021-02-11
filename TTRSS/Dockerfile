@@ -1,7 +1,7 @@
 FROM ubuntu
 LABEL maintainer="sboulema@gmail.com"
 
-ENV PHP_VERSION=8.0
+ENV PHP_VERSION=8
 ENV DEBIAN_FRONTEND=noninteractive 
 
 RUN useradd ttrss
