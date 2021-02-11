@@ -13,8 +13,12 @@ RUN apt-get update && \
 
 # install PHP and extensions
 RUN apt-get update && apt-get install -y \
-  git nginx supervisor php${PHP_VERSION}-fpm php${PHP_VERSION}-cli php${PHP_VERSION}-curl php${PHP_VERSION}-gd \
-  php${PHP_VERSION}-pgsql php${PHP_VERSION}-mysql php${PHP_VERSION}-mbstring php${PHP_VERSION}-xml php${PHP_VERSION}-intl \
+  php${PHP_VERSION} php${PHP_VERSION}-fpm \
+  php${PHP_VERSION}-pdo php${PHP_VERSION}-gd php${PHP_VERSION}-pgsql php${PHP_VERSION}-pdo_pgsql php${PHP_VERSION}-mbstring \
+  php${PHP_VERSION}-intl php${PHP_VERSION}-xml php${PHP_VERSION}-curl php${PHP_VERSION}-session \
+  php${PHP_VERSION}-dom php${PHP_VERSION}-fileinfo php${PHP_VERSION}-iconv \
+  php${PHP_VERSION}-pcntl php${PHP_VERSION}-posix php${PHP_VERSION}-zip php${PHP_VERSION}-openssl \
+  git nginx supervisor \
   && apt-get clean && rm -rf /var/lib/apt/lists/* && mkdir -p /var/run/php
 
 # enable mbstring modules
@@ -51,6 +55,7 @@ ENV TTRSS_LOCK_DIRECTORY="lock"
 ENV TTRSS_PLUGINS="auth_internal"
 ENV TTRSS_CONFIG_VERSION="26"
 ENV TTRSS_PHP_EXECUTABLE="/usr/bin/php${PHP_VERSION}"
+ENV TTRSS_LOG_DESTINATION="sql"
 
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \ 
