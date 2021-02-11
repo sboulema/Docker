@@ -34,8 +34,8 @@ RUN git clone https://git.tt-rss.org/fox/tt-rss.git .
 # expose only nginx HTTP port
 EXPOSE 80
 
-# patch configuration
-RUN cp config.php-dist config.php
+# set configuration to look at Docker ENV variables
+ADD config.docker.php config.php
 
 # set default settings
 ENV TTRSS_SELF_URL_PATH http://localhost
