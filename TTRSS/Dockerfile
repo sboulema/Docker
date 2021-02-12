@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
   php${PHP_VERSION}-intl php${PHP_VERSION}-xml php${PHP_VERSION}-curl \
   php${PHP_VERSION}-dom php${PHP_VERSION}-fileinfo php${PHP_VERSION}-iconv \
   php${PHP_VERSION}-posix php${PHP_VERSION}-zip \
-  git nginx supervisor \
+  git nginx supervisor sudo \
   && apt-get clean && rm -rf /var/lib/apt/lists/* && mkdir -p /var/run/php
 
 # enable PHP modules
@@ -75,4 +75,6 @@ RUN chown www-data:www-data -R /var/www && \
 ADD configure-db.php /configure-db.php
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN sed -i "s/PHP_VERSION/${PHP_VERSION}/" /etc/supervisor/conf.d/supervisord.conf
-CMD php /configure-db.php && sudo -E -u ttrss php update.php --update-schema=force-yes && supervisord -c /etc/supervisor/conf.d/supervisord.conf
+CMD php /configure-db.php && \
+    sudo -E -u ttrss php update.php --update-schema=force-yes && \
+    supervisord -c /etc/supervisor/conf.d/supervisord.conf
