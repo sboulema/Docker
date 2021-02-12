@@ -4,8 +4,7 @@ LABEL maintainer="sboulema@gmail.com"
 ENV PHP_VERSION=8.0
 ENV DEBIAN_FRONTEND=noninteractive 
 
-RUN useradd ttrss && \
-    adduser ttrss sudo
+RUN useradd ttrss
 
 # add PHP repository
 RUN apt-get update && \
@@ -24,9 +23,7 @@ RUN apt-get update && apt-get install -y \
 
 # enable PHP modules
 RUN phpenmod -v ${PHP_VERSION} mbstring && \
-    phpenmod -v ${PHP_VERSION} xml && \
-    phpenmod -v ${PHP_VERSION} pdo_pgsql && \
-    phpenmod -v ${PHP_VERSION} posix
+    phpenmod -v ${PHP_VERSION} xml
 
 # enable PHP ENV
 RUN sed -i.bak 's/;clear_env = .*/clear_env = no/i' /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
