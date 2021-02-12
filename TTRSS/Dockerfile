@@ -75,4 +75,4 @@ RUN chown www-data:www-data -R /var/www && \
 ADD configure-db.php /configure-db.php
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN sed -i "s/PHP_VERSION/${PHP_VERSION}/" /etc/supervisor/conf.d/supervisord.conf
-CMD php /configure-db.php && php update.php --update-schema=force-yes && supervisord -c /etc/supervisor/conf.d/supervisord.conf
+CMD php /configure-db.php && sudo -E -u ttrss php update.php --update-schema=force-yes && supervisord -c /etc/supervisor/conf.d/supervisord.conf
