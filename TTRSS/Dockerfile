@@ -36,13 +36,13 @@ RUN sed -i "s/PHP_VERSION/${PHP_VERSION}/" /etc/nginx/sites-available/ttrss
 RUN ln -s /etc/nginx/sites-available/ttrss /etc/nginx/sites-enabled/ttrss
 RUN rm /etc/nginx/sites-enabled/default
 
+# expose only nginx HTTP port
+EXPOSE 80
+
 # install ttrss
 WORKDIR /var/www
 RUN rm -rf *
 RUN git clone https://git.tt-rss.org/fox/tt-rss.git .
-
-# expose only nginx HTTP port
-EXPOSE 80
 
 # set default settings
 ENV TTRSS_SELF_URL_PATH="http://localhost"
@@ -63,11 +63,6 @@ ENV TTRSS_LOG_DESTINATION="sql"
 # set configuration to look at Docker ENV variables
 ADD config.docker.php config.php
 
-# patch configuration
-# RUN cp config.php-dist config.php
-# RUN sed -i "s/define('SESSION_COOKIE_LIFETIME', 86400);/define('SESSION_COOKIE_LIFETIME', ${TTRSS_SESSION_COOKIE_LIFETIME});/" config.php
-# RUN sed -i "s/define('SELF_URL_PATH', '%SELF_URL_PATH');/define('SELF_URL_PATH', ${TTRSS_SELF_URL_PATH});/" config.php
-
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \ 
     chmod -R 777 ${TTRSS_CACHE_DIR}/images && \
@@ -80,4 +75,4 @@ RUN chown www-data:www-data -R /var/www && \
 ADD configure-db.php /configure-db.php
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN sed -i "s/PHP_VERSION/${PHP_VERSION}/" /etc/supervisor/conf.d/supervisord.conf
-CMD php /configure-db.php && supervisord -c /etc/supervisor/conf.d/supervisord.conf
+CMD php /configure-db.php && php update.php --update-schema=force-yes && supervisord -c /etc/supervisor/conf.d/supervisord.conf
