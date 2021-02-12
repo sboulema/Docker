@@ -27,6 +27,9 @@ RUN phpenmod -v ${PHP_VERSION} mbstring && \
     phpenmod -v ${PHP_VERSION} pdo_pgsql && \
     phpenmod -v ${PHP_VERSION} posix
 
+# enable PHP ENV
+RUN sed -i.bak 's/;clear_env = .*/clear_env = no/i' /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
+
 # add ttrss as the only nginx site
 ADD ttrss.nginx.conf /etc/nginx/sites-available/ttrss
 RUN sed -i "s/PHP_VERSION/${PHP_VERSION}/" /etc/nginx/sites-available/ttrss
@@ -58,12 +61,12 @@ ENV TTRSS_PHP_EXECUTABLE="/usr/bin/php${PHP_VERSION}"
 ENV TTRSS_LOG_DESTINATION="sql"
 
 # set configuration to look at Docker ENV variables
-# ADD config.docker.php config.php
+ADD config.docker.php config.php
 
 # patch configuration
-RUN cp config.php-dist config.php
-RUN sed -i "s/define('SESSION_COOKIE_LIFETIME', 86400);/define('SESSION_COOKIE_LIFETIME', ${TTRSS_SESSION_COOKIE_LIFETIME});/" config.php
-RUN sed -i "s/define('SELF_URL_PATH', '%SELF_URL_PATH');/define('SELF_URL_PATH', ${TTRSS_SELF_URL_PATH});/" config.php
+# RUN cp config.php-dist config.php
+# RUN sed -i "s/define('SESSION_COOKIE_LIFETIME', 86400);/define('SESSION_COOKIE_LIFETIME', ${TTRSS_SESSION_COOKIE_LIFETIME});/" config.php
+# RUN sed -i "s/define('SELF_URL_PATH', '%SELF_URL_PATH');/define('SELF_URL_PATH', ${TTRSS_SELF_URL_PATH});/" config.php
 
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \ 
