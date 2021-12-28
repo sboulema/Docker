@@ -59,9 +59,6 @@ ENV TTRSS_PHP_EXECUTABLE="/usr/bin/php${PHP_VERSION}"
 ENV TTRSS_LOG_DESTINATION="sql"
 ENV NGINX_XACCEL_PREFIX="/tt-rss"
 
-# set configuration to look at Docker ENV variables
-#ADD config.docker.php config.php
-
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \ 
     chmod -R 777 ${TTRSS_CACHE_DIR}/images && \
