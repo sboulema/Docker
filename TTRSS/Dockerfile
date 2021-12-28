@@ -37,6 +37,8 @@ RUN rm /etc/nginx/sites-enabled/default
 # expose only nginx HTTP port
 EXPOSE 80
 
+EXPOSE 443
+
 # install ttrss
 WORKDIR /var/www
 RUN rm -rf *
