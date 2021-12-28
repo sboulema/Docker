@@ -37,8 +37,6 @@ RUN rm /etc/nginx/sites-enabled/default
 # expose only nginx HTTP port
 EXPOSE 80
 
-EXPOSE 443
-
 # install ttrss
 WORKDIR /var/www
 RUN rm -rf *
@@ -59,7 +57,9 @@ ENV TTRSS_PLUGINS="auth_internal"
 ENV TTRSS_CONFIG_VERSION="26"
 ENV TTRSS_PHP_EXECUTABLE="/usr/bin/php${PHP_VERSION}"
 ENV TTRSS_LOG_DESTINATION="sql"
-ENV NGINX_XACCEL_PREFIX="/tt-rss"
+
+# set configuration to look at Docker ENV variables
+ADD config.docker.php config.php
 
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \ 
