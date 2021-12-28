@@ -1,7 +1,7 @@
 FROM ubuntu
 LABEL maintainer="sboulema@gmail.com"
 
-ENV PHP_VERSION=8.0
+ENV PHP_VERSION=8.1
 ENV DEBIAN_FRONTEND=noninteractive 
 
 RUN useradd ttrss
@@ -59,7 +59,7 @@ ENV TTRSS_PHP_EXECUTABLE="/usr/bin/php${PHP_VERSION}"
 ENV TTRSS_LOG_DESTINATION="sql"
 
 # set configuration to look at Docker ENV variables
-ADD config.docker.php config.php
+#ADD config.docker.php config.php
 
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \ 
