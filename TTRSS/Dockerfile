@@ -68,9 +68,8 @@ ENV TTRSS_LOG_DESTINATION="sql"
 ADD config.docker.php config.php
 
 # set permissions on directories
-RUN 
-# chown www-data:www-data -R /var/www && \ 
-    chmod -R 777 ${TTRSS_CACHE_DIR}/images && \
+# RUN chown www-data:www-data -R /var/www && \ 
+  RUN chmod -R 777 ${TTRSS_CACHE_DIR}/images && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/upload && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/export && \
     chmod -R 777 feed-icons && \
