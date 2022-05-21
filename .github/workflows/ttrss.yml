@@ -31,7 +31,7 @@ jobs:
         with:
           context: TTRSS
           push: true
-          tags: sboulema/ttrss:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ github.run_number }} , ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:latest
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -40,4 +40,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          script: /home/sboulema/deployDockerContainer TTRSS
+          script: /home/${{ secrets.USERNAME }}/deployDockerContainer TTRSS
