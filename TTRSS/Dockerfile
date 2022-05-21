@@ -44,9 +44,9 @@ RUN rm -rf *
 RUN git clone https://git.tt-rss.org/fox/tt-rss.git .
 
 # install ttrss plugins
-RUN wget -c https://dev.tt-rss.org/fox/ttrss-close-button/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1  --one-top-level=plugins.local/close-button && \
-    wget -c https://dev.tt-rss.org/fox/ttrss-favicon-unread/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins.local/favicon-unread && \
-    wget -c https://dev.tt-rss.org/fox/ttrss-no-url-hashes/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins.local/no-url-hashes
+RUN wget -c https://dev.tt-rss.org/fox/ttrss-close-button/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1  --one-top-level=plugins/close_button && \
+    wget -c https://dev.tt-rss.org/fox/ttrss-favicon-unread/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins/favicon_unread && \
+    wget -c https://dev.tt-rss.org/fox/ttrss-no-url-hashes/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins/no_url_hashes
 
 # set default settings
 ENV TTRSS_SELF_URL_PATH="http://localhost"
@@ -68,13 +68,13 @@ ENV TTRSS_LOG_DESTINATION="sql"
 ADD config.docker.php config.php
 
 # set permissions on directories
-RUN chown www-data:www-data -R /var/www && \ 
+RUN 
+# chown www-data:www-data -R /var/www && \ 
     chmod -R 777 ${TTRSS_CACHE_DIR}/images && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/upload && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/export && \
     chmod -R 777 feed-icons && \
     chmod -R 777 lock
-RUN git config --global --add safe.directory /var/www
 
 # always re-configure database with current ENV when RUNning container, then monitor all services
 ADD configure-db.php /configure-db.php
