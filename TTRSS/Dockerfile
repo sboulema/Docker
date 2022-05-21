@@ -68,6 +68,7 @@ RUN chown www-data:www-data -R /var/www && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/export && \
     chmod -R 777 feed-icons && \
     chmod -R 777 lock
+RUN git config --global --add safe.directory /var/www
 
 # always re-configure database with current ENV when RUNning container, then monitor all services
 ADD configure-db.php /configure-db.php
