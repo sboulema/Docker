@@ -44,9 +44,9 @@ RUN rm -rf *
 RUN git clone https://git.tt-rss.org/fox/tt-rss.git .
 
 # install ttrss plugins
-RUN wget -c https://dev.tt-rss.org/fox/ttrss-close-button/archive/master.tar.gz -O - | sudo tar -xz -C plugins.local
-RUN wget -c https://dev.tt-rss.org/fox/ttrss-favicon-unread/archive/master.tar.gz -O - | sudo tar -xz -C plugins.local
-RUN wget -c https://dev.tt-rss.org/fox/ttrss-no-url-hashes/archive/master.tar.gz -O - | sudo tar -xz -C plugins.local
+RUN wget -c https://dev.tt-rss.org/fox/ttrss-close-button/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1 -C plugins.local/close-button && \
+    wget -c https://dev.tt-rss.org/fox/ttrss-favicon-unread/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1 -C plugins.local/favicon-unread && \
+    wget -c https://dev.tt-rss.org/fox/ttrss-no-url-hashes/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1 -C plugins.local/no-url-hashes
 
 # set default settings
 ENV TTRSS_SELF_URL_PATH="http://localhost"
