@@ -6,13 +6,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN useradd ttrss
 
+RUN apt-get update && apt-get install -y wget
+
 # add PHP repository
-RUN apt-get update && \
-  apt-get install -y software-properties-common && \
+RUN apt-get install -y software-properties-common && \
   add-apt-repository ppa:ondrej/php
 
 # install PHP and extensions
-RUN apt-get update && apt-get install -y \
+RUN apt-get install -y \
   php${PHP_VERSION} php${PHP_VERSION}-fpm \
   php${PHP_VERSION}-pdo php${PHP_VERSION}-gd php${PHP_VERSION}-pgsql php${PHP_VERSION}-mbstring \
   php${PHP_VERSION}-intl php${PHP_VERSION}-xml php${PHP_VERSION}-curl \
