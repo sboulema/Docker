@@ -59,21 +59,21 @@ ENV TTRSS_SESSION_COOKIE_LIFETIME="86400000"
 ENV TTRSS_CACHE_DIR="cache"
 ENV TTRSS_ICONS_DIR="feed-icons"
 ENV TTRSS_LOCK_DIRECTORY="lock"
-ENV TTRSS_PLUGINS="auth_internal"
-ENV TTRSS_CONFIG_VERSION="26"
+# ENV TTRSS_PLUGINS="auth_internal"
+# ENV TTRSS_CONFIG_VERSION="26"
 ENV TTRSS_PHP_EXECUTABLE="/usr/bin/php${PHP_VERSION}"
-ENV TTRSS_LOG_DESTINATION="sql"
+# ENV TTRSS_LOG_DESTINATION="sql"
 
 # set configuration to look at Docker ENV variables
-ADD config.docker.php config.php
+# ADD config.docker.php config.php
 
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/images && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/upload && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/export && \
-    chmod -R 777 feed-icons && \
-    chmod -R 777 lock
+    chmod -R 777 ${TTRSS_ICONS_DIR} && \
+    chmod -R 777 ${TTRSS_LOCK_DIRECTORY}
 
 # always re-configure database with current ENV when RUNning container, then monitor all services
 ADD configure-db.php /configure-db.php
