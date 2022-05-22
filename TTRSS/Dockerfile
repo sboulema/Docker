@@ -7,13 +7,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN useradd ttrss
 
 # add repositories: PHP, Git
-RUN apt-get install -y software-properties-common && \
-  add-apt-repository ppa:ondrej/php && \
-  add-apt-repository ppa:git-core/ppa
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:ondrej/php && \
+    add-apt-repository ppa:git-core/ppa && \
+    apt-get update
 
 # install tools
-RUN apt-get update && \
-    apt-get install -y \
+RUN apt-get install -y \
     wget \
     git
 
