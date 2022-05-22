@@ -6,11 +6,16 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN useradd ttrss
 
-RUN apt-get update && apt-get install -y wget
-
-# add PHP repository
+# add repositories: PHP, Git
 RUN apt-get install -y software-properties-common && \
-  add-apt-repository ppa:ondrej/php
+  add-apt-repository ppa:ondrej/php && \
+  add-apt-repository ppa:git-core/ppa
+
+# install tools
+RUN apt-get update && \
+    apt-get install -y \
+    wget \
+    git
 
 # install PHP and extensions
 RUN apt-get install -y \
@@ -19,7 +24,7 @@ RUN apt-get install -y \
   php${PHP_VERSION}-intl php${PHP_VERSION}-xml php${PHP_VERSION}-curl \
   php${PHP_VERSION}-dom php${PHP_VERSION}-fileinfo php${PHP_VERSION}-iconv \
   php${PHP_VERSION}-posix php${PHP_VERSION}-zip \
-  git nginx supervisor sudo \
+  nginx supervisor sudo \
   && apt-get clean && rm -rf /var/lib/apt/lists/* && mkdir -p /var/run/php
 
 # enable PHP modules
@@ -42,6 +47,7 @@ EXPOSE 80
 WORKDIR /var/www
 RUN rm -rf *
 RUN git clone https://git.tt-rss.org/fox/tt-rss.git .
+RUN git config --global --add safe.directory /var/www
 
 # install ttrss plugins
 RUN wget -c https://dev.tt-rss.org/fox/ttrss-close-button/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1  --one-top-level=plugins/close_button && \
@@ -59,13 +65,7 @@ ENV TTRSS_SESSION_COOKIE_LIFETIME="86400000"
 ENV TTRSS_CACHE_DIR="cache"
 ENV TTRSS_ICONS_DIR="feed-icons"
 ENV TTRSS_LOCK_DIRECTORY="lock"
-# ENV TTRSS_PLUGINS="auth_internal"
-# ENV TTRSS_CONFIG_VERSION="26"
 ENV TTRSS_PHP_EXECUTABLE="/usr/bin/php${PHP_VERSION}"
-# ENV TTRSS_LOG_DESTINATION="sql"
-
-# set configuration to look at Docker ENV variables
-# ADD config.docker.php config.php
 
 # set permissions on directories
 RUN chown www-data:www-data -R /var/www && \

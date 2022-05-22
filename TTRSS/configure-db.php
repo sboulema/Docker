@@ -1,8 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-// $confpath = '/var/www/config.php';
-
 $config = array();
 
 // path to ttrss
@@ -99,12 +97,6 @@ catch (PDOException $e) {
     }
     unset($pdo);
 }
-
-// $contents = file_get_contents($confpath);
-// foreach ($config as $name => $value) {
-//     $contents = preg_replace('/(define\s*\(\'' . $name . '\',\s*)(.*)(\);)/', '$1"' . $value . '"$3', $contents);
-// }
-// file_put_contents($confpath, $contents);
 
 function env($name, $default = null)
 {
