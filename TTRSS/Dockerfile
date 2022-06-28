@@ -56,8 +56,8 @@ RUN wget -c https://dev.tt-rss.org/fox/ttrss-close-button/archive/master.tar.gz 
     wget -c https://dev.tt-rss.org/fox/ttrss-no-url-hashes/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins/no_url_hashes
 
 # install third-party ttrss plugins
-# RUN wget -c https://github.com/nneul/tt-rss-one-click-mark/archive/refs/tags/v0.2.tar.gz -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins.local tt-rss-one-click-mark-0.2/one_click_mark
-RUN wget -c https://github.com/sboulema/tt-rss-one-click-mark/tarball/master -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins.local sboulema-tt-rss-one-click-mark-5bb82b5/one_click_mark
+RUN wget -c https://github.com/nneul/tt-rss-one-click-mark/archive/refs/tags/v0.3.tar.gz -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins.local tt-rss-one-click-mark-0.3/one_click_mark
+# RUN wget -c https://github.com/sboulema/tt-rss-one-click-mark/tarball/master -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins.local sboulema-tt-rss-one-click-mark-5bb82b5/one_click_mark
 
 # set default settings
 ENV TTRSS_SELF_URL_PATH="http://localhost"
