@@ -78,7 +78,7 @@ RUN chown www-data:www-data -R /var/www && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/images && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/upload && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/export && \
-    chmod -R 777 ${TTRSS_ICONS_DIR} && \
+    chmod -R 777 ${TTRSS_CACHE_DIR}/feed-icons && \
     chmod -R 777 ${TTRSS_LOCK_DIRECTORY}
 
 # always re-configure database with current ENV when RUNning container, then monitor all services
