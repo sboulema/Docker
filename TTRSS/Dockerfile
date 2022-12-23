@@ -69,7 +69,7 @@ ENV TTRSS_DB_TYPE="pgsql"
 ENV TTRSS_DB_PORT="5432"
 ENV TTRSS_SESSION_COOKIE_LIFETIME="86400000"
 ENV TTRSS_CACHE_DIR="cache"
-# ENV TTRSS_ICONS_DIR="feed-icons"
+ENV TTRSS_ICONS_DIR="feed-icons"
 ENV TTRSS_LOCK_DIRECTORY="lock"
 ENV TTRSS_PHP_EXECUTABLE="/usr/bin/php${PHP_VERSION}"
 
@@ -80,6 +80,7 @@ RUN chown www-data:www-data -R /var/www && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/upload && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/export && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/feed-icons && \
+    chmod -R 777 ${TTRSS_ICONS_DIR} && \
     chmod -R 777 ${TTRSS_LOCK_DIRECTORY}
 
 # always re-configure database with current ENV when RUNning container, then monitor all services
