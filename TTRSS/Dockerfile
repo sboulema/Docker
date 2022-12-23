@@ -74,6 +74,7 @@ ENV TTRSS_LOCK_DIRECTORY="lock"
 ENV TTRSS_PHP_EXECUTABLE="/usr/bin/php${PHP_VERSION}"
 
 # set permissions on directories
+RUN mkdir ${TTRSS_CACHE_DIR}/feed-icons
 RUN chown www-data:www-data -R /var/www && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/images && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/upload && \
