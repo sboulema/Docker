@@ -47,13 +47,13 @@ EXPOSE 80
 # install ttrss
 WORKDIR /var/www
 RUN rm -rf *
-RUN git clone https://git.tt-rss.org/fox/tt-rss.git .
+RUN git clone https://gitlab.tt-rss.org/tt-rss/tt-rss.git .
 RUN git config --global --add safe.directory /var/www
 
 # install first-party ttrss plugins
-RUN wget -c https://dev.tt-rss.org/fox/ttrss-close-button/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1  --one-top-level=plugins/close_button && \
-    wget -c https://dev.tt-rss.org/fox/ttrss-favicon-unread/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins/favicon_unread && \
-    wget -c https://dev.tt-rss.org/fox/ttrss-no-url-hashes/archive/master.tar.gz -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins/no_url_hashes
+RUN git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-close-button.git plugins/close_button && \
+    git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-favicon-unread.git plugins/favicon_unread && \
+    git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-no-url-hashes.git plugins/no_url_hashes
 
 # install third-party ttrss plugins
 RUN wget -c https://github.com/nneul/tt-rss-one-click-mark/archive/refs/tags/v0.3.tar.gz -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins.local tt-rss-one-click-mark-0.3/one_click_mark
