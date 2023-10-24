@@ -8,6 +8,7 @@ on:
 
 env:
   version: '1.0.${{ github.run_number }}'
+  tag: ${{ github.ref_name == 'main' && 'latest' || github.run_number }}
 
 jobs:
   build:
@@ -17,8 +18,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -27,12 +32,21 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
-          context: TTRSS
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ github.run_number }} , ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:latest
-
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ env.tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ github.run_number }}
+            ghcr.io/${{ github.actor }}/ttrss:${{ env.tag }}
+            ghcr.io/${{ github.actor }}/ttrss:${{ github.run_number }}
+            
+  deploy:
+    if: github.ref_name == 'main'
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
@@ -40,4 +54,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          script: /home/${{ secrets.USERNAME }}/deployDockerContainer TTRSS
+          script: /home/${{ secrets.USERNAME }}/deployDockerContainer TTRSS            

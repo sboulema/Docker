@@ -61,7 +61,6 @@ RUN wget -c https://github.com/nneul/tt-rss-one-click-mark/archive/refs/tags/v0.
 RUN git clone https://github.com/VerifiedJoseph/ttrss-plugin-gotify plugins.local/gotify_notifications
 
 # set default settings
-ENV TTRSS_SELF_URL_PATH="http://localhost"
 ENV TTRSS_DB_NAME="ttrss"
 ENV TTRSS_DB_USER="ttrss"
 ENV TTRSS_DB_PASS="ttrss"
