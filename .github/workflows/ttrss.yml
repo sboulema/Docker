@@ -34,6 +34,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
+          context: TTRSS
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ env.tag }}
