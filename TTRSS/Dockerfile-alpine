@@ -19,9 +19,8 @@ RUN apk add --no-cache \
 
 # configure PHP
 RUN sed -i 's/\(memory_limit =\) 128M/\1 256M/' /etc/php${PHP_VERSION}/php.ini
+# https://www.librebyte.net/en/systems-deployment/how-to-install-php-php-fpm-in-alpine-linux/
 RUN sed -i 's/;\(clear_env\) = .*/\1 = no/i' /etc/php${PHP_VERSION}/php-fpm.d/www.conf
-#RUN sed -i -e 's/^listen = 127.0.0.1:9000/listen = 9000/' \
-#       -e 's/;\(clear_env\) = .*/\1 = no/i' /usr/local/etc/php-fpm.d/www.conf
 # https://stackoverflow.com/questions/70180743/alpine-edge-bin-sh-php-not-found
 RUN ln -s /usr/bin/php${PHP_VERSION} /usr/bin/php
 
@@ -64,7 +63,7 @@ RUN chown nobody:nginx -R /var/www && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/feed-icons && \
     chmod -R 777 ${TTRSS_ICONS_DIR} && \
     chmod -R 777 ${TTRSS_LOCK_DIRECTORY}
-RUN git config --global --add safe.directory /var/www
+RUN sudo git config --system --add safe.directory /var/www
 
 # always re-configure database with current ENV when RUNning container, then monitor all services
 ADD configure-db.php /configure-db.php
