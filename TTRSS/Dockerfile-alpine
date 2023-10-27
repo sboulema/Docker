@@ -16,10 +16,6 @@ RUN apk add --update --no-cache \
   php${PHP_VERSION}-posix php${PHP_VERSION}-zip
 RUN mkdir -p /var/run/php
 
-# enable PHP modules
-RUN phpenmod -v ${PHP_VERSION} mbstring && \
-    phpenmod -v ${PHP_VERSION} xml
-
 # enable PHP ENV
 RUN sed -i.bak 's/;clear_env = .*/clear_env = no/i' /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
 
