@@ -6,7 +6,7 @@ ARG PHP_VERSION=82
 
 # install tools
 RUN apk add --update --no-cache \
-    git sudo nginx supervisor tar wget
+    git sudo nginx supervisor
 
 # install PHP
 RUN apk add --no-cache \
@@ -25,9 +25,7 @@ RUN sed -i 's/\(memory_limit =\) 128M/\1 256M/' /etc/php${PHP_VERSION}/php.ini
 RUN ln -s /usr/bin/php${PHP_VERSION} /usr/bin/php
 
 # configure nginx
-ADD ttrss.nginx.conf /etc/nginx/nginx.conf
-RUN sed -i -e "s/PHP_VERSION/${PHP_VERSION}/" \
-        -e "s/fastcgi_pass .*/fastcgi_pass 127.0.0.1:9000;/" /etc/nginx/nginx.conf
+ADD ttrss.nginx-alpine.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
 # install ttrss
@@ -41,9 +39,8 @@ RUN git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-close-button.git pl
     git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-no-url-hashes.git plugins/no_url_hashes
 
 # install third-party ttrss plugins
-RUN wget -c https://github.com/nneul/tt-rss-one-click-mark/archive/refs/tags/v0.3.tar.gz -O - | sudo tar -xz --strip-components 1 --one-top-level=plugins.local tt-rss-one-click-mark-0.3/one_click_mark
-
-RUN git clone https://github.com/VerifiedJoseph/ttrss-plugin-gotify plugins.local/gotify_notifications
+RUN git clone https://github.com/sboulema/tt-rss-one-click-mark.git plugins.local/one_click_mark && \
+    git clone https://github.com/VerifiedJoseph/ttrss-plugin-gotify plugins.local/gotify_notifications
 
 # set default settings
 ENV TTRSS_DB_NAME="ttrss"
