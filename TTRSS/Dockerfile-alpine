@@ -1,16 +1,14 @@
 FROM alpine
 LABEL maintainer="sboulema@gmail.com"
 
-ENV PHP_VERSION=8.1
-
-# install tools
-RUN apk add --update git \
-  nginx \
-  supervisor \
-  sudo
+ENV PHP_VERSION=81
 
 # install PHP and extensions
-RUN apk add \
+RUN apk add --update --no-cache \
+  git \
+  nginx \
+  supervisor \
+  sudo \
   php${PHP_VERSION} php${PHP_VERSION}-fpm \
   php${PHP_VERSION}-pdo php${PHP_VERSION}-gd php${PHP_VERSION}-pgsql php${PHP_VERSION}-mbstring \
   php${PHP_VERSION}-intl php${PHP_VERSION}-xml php${PHP_VERSION}-curl \
