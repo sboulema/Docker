@@ -1,0 +1,79 @@
+FROM alpine
+
+LABEL maintainer="sboulema@gmail.com"
+
+ARG PHP_VERSION=82
+
+# install tools
+RUN apk add --update --no-cache \
+    git sudo nginx supervisor
+
+# install PHP
+RUN apk add --no-cache \
+    php${PHP_VERSION} php${PHP_VERSION}-fpm php${PHP_VERSION}-phar php${PHP_VERSION}-sockets php${PHP_VERSION}-pecl-apcu \
+	php${PHP_VERSION}-pdo php${PHP_VERSION}-gd php${PHP_VERSION}-pgsql php${PHP_VERSION}-pdo_pgsql php${PHP_VERSION}-xmlwriter \
+    php${PHP_VERSION}-opcache php${PHP_VERSION}-mbstring php${PHP_VERSION}-intl php${PHP_VERSION}-xml php${PHP_VERSION}-curl \
+    php${PHP_VERSION}-simplexml php${PHP_VERSION}-session php${PHP_VERSION}-tokenizer php${PHP_VERSION}-dom \
+    php${PHP_VERSION}-fileinfo php${PHP_VERSION}-ctype php${PHP_VERSION}-json php${PHP_VERSION}-iconv php${PHP_VERSION}-pcntl \
+    php${PHP_VERSION}-posix php${PHP_VERSION}-zip php${PHP_VERSION}-exif php${PHP_VERSION}-openssl
+
+# configure PHP
+RUN sed -i 's/\(memory_limit =\) 128M/\1 256M/' /etc/php${PHP_VERSION}/php.ini
+
+# https://www.librebyte.net/en/systems-deployment/how-to-install-php-php-fpm-in-alpine-linux/
+RUN sed -i 's/;\(clear_env\) = .*/\1 = no/i' /etc/php${PHP_VERSION}/php-fpm.d/www.conf
+
+# https://stackoverflow.com/questions/70180743/alpine-edge-bin-sh-php-not-found
+RUN ln -s /usr/bin/php${PHP_VERSION} /usr/bin/php
+
+# configure nginx
+ADD ttrss.nginx-alpine.conf /etc/nginx/nginx.conf
+EXPOSE 80
+
+# install ttrss
+WORKDIR /var/www
+RUN rm -rf *
+RUN git clone https://gitlab.tt-rss.org/tt-rss/tt-rss.git --depth=1 .
+
+# install first-party ttrss plugins
+RUN git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-close-button.git plugins/close_button && \
+    git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-favicon-unread.git plugins/favicon_unread && \
+    git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-no-url-hashes.git plugins/no_url_hashes
+
+# install third-party ttrss plugins
+RUN git clone https://github.com/sboulema/tt-rss-one-click-mark.git plugins.local/one_click_mark && \
+    git clone https://github.com/VerifiedJoseph/ttrss-plugin-gotify plugins.local/gotify_notifications
+
+# set default settings
+ENV TTRSS_DB_NAME="ttrss"
+ENV TTRSS_DB_USER="ttrss"
+ENV TTRSS_DB_PASS="ttrss"
+ENV TTRSS_DB_TYPE="pgsql"
+ENV TTRSS_DB_PORT="5432"
+ENV TTRSS_SESSION_COOKIE_LIFETIME="86400000"
+ENV TTRSS_CACHE_DIR="cache"
+ENV TTRSS_ICONS_DIR="feed-icons"
+ENV TTRSS_LOCK_DIRECTORY="lock"
+ENV TTRSS_PHP_EXECUTABLE="/usr/bin/php"
+
+# set permissions on directories
+RUN mkdir ${TTRSS_CACHE_DIR}/feed-icons
+RUN chown nobody:nginx -R /var/www && \
+    chmod -R 777 ${TTRSS_CACHE_DIR}/images && \
+    chmod -R 777 ${TTRSS_CACHE_DIR}/upload && \
+    chmod -R 777 ${TTRSS_CACHE_DIR}/export && \
+    chmod -R 777 ${TTRSS_CACHE_DIR}/feed-icons && \
+    chmod -R 777 ${TTRSS_ICONS_DIR} && \
+    chmod -R 777 ${TTRSS_LOCK_DIRECTORY}
+    
+# https://stackoverflow.com/questions/74843987/git-2-34-1-dubious-ownership-error-not-fixed-by-safe-directory
+RUN sudo git config --system --add safe.directory /var/www
+
+# always re-configure database with current ENV when RUNning container, then monitor all services
+ADD configure-db.php /configure-db.php
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN sed -i -e "s/PHP_VERSION/${PHP_VERSION}/" \
+        -e "s/www-data/nginx/" /etc/supervisor/conf.d/supervisord.conf
+CMD php /configure-db.php && \
+    sudo -E -u nobody php update.php --update-schema=force-yes && \
+    supervisord -c /etc/supervisor/conf.d/supervisord.conf

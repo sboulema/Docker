@@ -8,11 +8,12 @@ on:
 
 env:
   version: '1.0.${{ github.run_number }}'
-  tag: ${{ github.ref_name == 'main' && 'latest' || github.run_number }}
+  ubuntu_tag: ${{ github.ref_name == 'main' && 'latest' || github.run_number }}
+  alpine_tag: ${{ github.ref_name == 'main' && 'alpine' || format('{0}-alpine', github.run_number) }}
 
 jobs:
-  build:
-    name: Build
+  build-ubuntu:
+    name: Build Ubuntu
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,18 +36,51 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: TTRSS
+          file: TTRSS/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ env.tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ env.ubuntu_tag }}
             ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ github.run_number }}
-            ghcr.io/${{ github.actor }}/ttrss:${{ env.tag }}
+            ghcr.io/${{ github.actor }}/ttrss:${{ env.ubuntu_tag }}
             ghcr.io/${{ github.actor }}/ttrss:${{ github.run_number }}
-            
+
+  build-alpine:
+    name: Build Alpine
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: TTRSS
+          file: TTRSS/Dockerfile-alpine
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ env.alpine_tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ github.run_number }}-alpine
+            ghcr.io/${{ github.actor }}/ttrss:${{ env.alpine_tag }}
+            ghcr.io/${{ github.actor }}/ttrss:${{ github.run_number }}-alpine
+
   deploy:
     if: github.ref_name == 'main'
     name: Deploy
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-alpine
     steps:
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -55,4 +89,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          script: /home/${{ secrets.USERNAME }}/deployDockerContainer TTRSS            
+          script: /home/${{ secrets.USERNAME }}/deployDockerContainer TTRSS
