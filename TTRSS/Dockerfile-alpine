@@ -14,7 +14,8 @@ RUN apk add --update --no-cache \
   tar \
   wget \
   php${APK_PHP_VERSION} php${APK_PHP_VERSION}-fpm \
-  php${APK_PHP_VERSION}-pdo php${APK_PHP_VERSION}-gd php${APK_PHP_VERSION}-pgsql php${APK_PHP_VERSION}-mbstring \
+  php${APK_PHP_VERSION}-pdo php${APK_PHP_VERSION}-gd php${APK_PHP_VERSION}-pgsql \
+  php${APK_PHP_VERSION}-pdo_pgsql php${APK_PHP_VERSION}-mbstring \
   php${APK_PHP_VERSION}-intl php${APK_PHP_VERSION}-xml php${APK_PHP_VERSION}-curl \
   php${APK_PHP_VERSION}-dom php${APK_PHP_VERSION}-fileinfo php${APK_PHP_VERSION}-iconv \
   php${APK_PHP_VERSION}-posix php${APK_PHP_VERSION}-zip
