@@ -18,7 +18,7 @@ RUN apk add --update --no-cache \
 RUN mkdir -p /var/run/php
 
 # enable PHP ENV
-RUN sed -i.bak 's/;clear_env = .*/clear_env = no/i' /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
+RUN sed -i.bak 's/;clear_env = .*/clear_env = no/i' /usr/local/etc/php-fpm.d/www.conf
 
 # add ttrss as the only nginx site
 ADD ttrss.nginx.conf /etc/nginx/sites-available/ttrss
