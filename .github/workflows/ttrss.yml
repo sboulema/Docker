@@ -35,7 +35,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: TTRSS
-          file: Dockerfile
+          file: TTRSS/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ env.tag }}
@@ -47,7 +47,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: TTRSS
-          file: Dockerfile-alpine
+          file: TTRSS/Dockerfile-alpine
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/ttrss-alpine:${{ env.tag }}
