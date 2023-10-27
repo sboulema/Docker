@@ -34,7 +34,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          file: TTRSS/Dockerfile
+          context: TTRSS
+          file: Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ env.tag }}
@@ -45,7 +46,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          file: TTRSS/Dockerfile
+          context: TTRSS
+          file: Dockerfile-alpine
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/ttrss-alpine:${{ env.tag }}
