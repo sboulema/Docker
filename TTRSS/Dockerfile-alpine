@@ -72,8 +72,8 @@ RUN git config --global --add safe.directory /var/www
 # always re-configure database with current ENV when RUNning container, then monitor all services
 ADD configure-db.php /configure-db.php
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN sed -i "s/PHP_VERSION/${PHP_VERSION}/" \
-        -i "s/www-data/nginx/" /etc/supervisor/conf.d/supervisord.conf
+RUN sed -i -e "s/PHP_VERSION/${PHP_VERSION}/" \
+        -e "s/www-data/nginx/" /etc/supervisor/conf.d/supervisord.conf
 CMD php /configure-db.php && \
     sudo -E -u nobody php update.php --update-schema=force-yes && \
     supervisord -c /etc/supervisor/conf.d/supervisord.conf
