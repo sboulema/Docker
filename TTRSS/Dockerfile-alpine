@@ -19,8 +19,10 @@ RUN apk add --no-cache \
 
 # configure PHP
 RUN sed -i 's/\(memory_limit =\) 128M/\1 256M/' /etc/php${PHP_VERSION}/php.ini
+
 # https://www.librebyte.net/en/systems-deployment/how-to-install-php-php-fpm-in-alpine-linux/
 RUN sed -i 's/;\(clear_env\) = .*/\1 = no/i' /etc/php${PHP_VERSION}/php-fpm.d/www.conf
+
 # https://stackoverflow.com/questions/70180743/alpine-edge-bin-sh-php-not-found
 RUN ln -s /usr/bin/php${PHP_VERSION} /usr/bin/php
 
@@ -63,6 +65,8 @@ RUN chown nobody:nginx -R /var/www && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/feed-icons && \
     chmod -R 777 ${TTRSS_ICONS_DIR} && \
     chmod -R 777 ${TTRSS_LOCK_DIRECTORY}
+    
+# https://stackoverflow.com/questions/74843987/git-2-34-1-dubious-ownership-error-not-fixed-by-safe-directory
 RUN sudo git config --system --add safe.directory /var/www
 
 # always re-configure database with current ENV when RUNning container, then monitor all services
