@@ -1,7 +1,8 @@
 FROM alpine
 LABEL maintainer="sboulema@gmail.com"
 
-ENV PHP_VERSION=81
+ENV APK_PHP_VERSION=81
+ENV PHP_VERSION=8.1
 
 # install PHP and extensions
 RUN apk add --update --no-cache \
@@ -9,12 +10,11 @@ RUN apk add --update --no-cache \
   nginx \
   supervisor \
   sudo \
-  sed \
-  php${PHP_VERSION} php${PHP_VERSION}-fpm \
-  php${PHP_VERSION}-pdo php${PHP_VERSION}-gd php${PHP_VERSION}-pgsql php${PHP_VERSION}-mbstring \
-  php${PHP_VERSION}-intl php${PHP_VERSION}-xml php${PHP_VERSION}-curl \
-  php${PHP_VERSION}-dom php${PHP_VERSION}-fileinfo php${PHP_VERSION}-iconv \
-  php${PHP_VERSION}-posix php${PHP_VERSION}-zip
+  php${APK_PHP_VERSION} php${APK_PHP_VERSION}-fpm \
+  php${APK_PHP_VERSION}-pdo php${APK_PHP_VERSION}-gd php${APK_PHP_VERSION}-pgsql php${APK_PHP_VERSION}-mbstring \
+  php${APK_PHP_VERSION}-intl php${APK_PHP_VERSION}-xml php${APK_PHP_VERSION}-curl \
+  php${APK_PHP_VERSION}-dom php${APK_PHP_VERSION}-fileinfo php${APK_PHP_VERSION}-iconv \
+  php${APK_PHP_VERSION}-posix php${APK_PHP_VERSION}-zip
 RUN mkdir -p /var/run/php
 
 # enable PHP ENV
