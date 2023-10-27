@@ -70,10 +70,10 @@ jobs:
           file: TTRSS/Dockerfile-alpine
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:alpine-${{ env.tag }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:alpine-${{ github.run_number }}
-            ghcr.io/${{ github.actor }}/ttrss:alpine-${{ env.tag }}
-            ghcr.io/${{ github.actor }}/ttrss:alpine-${{ github.run_number }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ env.tag }}-alpine
+            ${{ secrets.DOCKERHUB_USERNAME }}/ttrss:${{ github.run_number }}-alpine
+            ghcr.io/${{ github.actor }}/ttrss:${{ env.tag }}-alpine
+            ghcr.io/${{ github.actor }}/ttrss:${{ github.run_number }}-alpine
 
   deploy:
     if: github.ref_name == 'main'
