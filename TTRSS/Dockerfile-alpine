@@ -2,7 +2,8 @@ FROM alpine
 
 LABEL maintainer="sboulema@gmail.com"
 
-ARG PHP_VERSION=82
+# https://pkgs.alpinelinux.org/packages?name=php*
+ARG PHP_VERSION=83
 
 # install tools
 RUN apk add --update --no-cache \
