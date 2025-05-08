@@ -12,10 +12,6 @@ if (getenv('TTRSS_DB_TYPE') !== false) {
     // postgres container linked
     $config['TTRSS_DB_TYPE'] = 'pgsql';
     $eport = 5432;
-} elseif (getenv('TTRSS_DB_PORT_3306_TCP_ADDR') !== false) {
-    // mysql container linked
-    $config['TTRSS_DB_TYPE'] = 'mysql';
-    $eport = 3306;
 }
 
 if (!empty($eport)) {
@@ -30,9 +26,6 @@ if (!empty($eport)) {
 
     if (empty($config['TTRSS_DB_TYPE'])) {
         switch ($config['TTRSS_DB_PORT']) {
-            case 3306:
-                $config['TTRSS_DB_TYPE'] = 'mysql';
-                break;
             case 5432:
                 $config['TTRSS_DB_TYPE'] = 'pgsql';
                 break;
@@ -64,13 +57,9 @@ if (!dbcheck($config)) {
 
     $pdo = dbconnect($super);
 
-    if ($super['TTRSS_DB_TYPE'] === 'mysql') {
-        $pdo->exec('CREATE DATABASE ' . ($config['TTRSS_DB_NAME']));
-        $pdo->exec('GRANT ALL PRIVILEGES ON ' . ($config['TTRSS_DB_NAME']) . '.* TO ' . $pdo->quote($config['TTRSS_DB_USER']) . '@"%" IDENTIFIED BY ' . $pdo->quote($config['TTRSS_DB_PASS']));
-    } else {
-        $pdo->exec('CREATE ROLE ' . ($config['TTRSS_DB_USER']) . ' WITH LOGIN PASSWORD ' . $pdo->quote($config['TTRSS_DB_PASS']));
-        $pdo->exec('CREATE DATABASE ' . ($config['TTRSS_DB_NAME']) . ' WITH OWNER ' . ($config['TTRSS_DB_USER']));
-    }
+    $pdo->exec('CREATE ROLE ' . ($config['TTRSS_DB_USER']) . ' WITH LOGIN PASSWORD ' . $pdo->quote($config['TTRSS_DB_PASS']));
+    $pdo->exec('GRANT CREATE ON SCHEMA public TO ' . ($config['TTRSS_DB_USER']));
+    $pdo->exec('CREATE DATABASE ' . ($config['TTRSS_DB_NAME']) . ' WITH OWNER ' . ($config['TTRSS_DB_USER']));
 
     unset($pdo);
 
