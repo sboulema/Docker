@@ -13,7 +13,7 @@ env:
 
 jobs:
   build-ubuntu:
-    name: Build Ubuntu
+    name: 🛠️ Build Ubuntu
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,7 +33,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: TTRSS
           file: TTRSS/Dockerfile
@@ -45,7 +45,7 @@ jobs:
             ghcr.io/${{ github.actor }}/ttrss:${{ github.run_number }}
 
   build-alpine:
-    name: Build Alpine
+    name: 🛠️ Build Alpine
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -65,7 +65,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: TTRSS
           file: TTRSS/Dockerfile-alpine
@@ -78,7 +78,7 @@ jobs:
 
   deploy:
     if: github.ref_name == 'main'
-    name: Deploy
+    name: 🚀 Deploy
     runs-on: ubuntu-latest
     needs: build-alpine
     steps:
