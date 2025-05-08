@@ -61,7 +61,7 @@ if (!dbcheck($config)) {
     $super['TTRSS_DB_NAME'] = null;
     $super['TTRSS_DB_USER'] = env('TTRSS_DB_ENV_USER', 'docker');
     $super['TTRSS_DB_PASS'] = env('TTRSS_DB_ENV_PASS', $super['TTRSS_DB_USER']);
-    
+
     $pdo = dbconnect($super);
 
     if ($super['TTRSS_DB_TYPE'] === 'mysql') {
@@ -73,7 +73,7 @@ if (!dbcheck($config)) {
     }
 
     unset($pdo);
-    
+
     if (dbcheck($config)) {
         echo 'Database login created and confirmed' . PHP_EOL;
     } else {
@@ -101,11 +101,11 @@ catch (PDOException $e) {
 function env($name, $default = null)
 {
     $v = getenv($name) ?: $default;
-    
+
     if ($v === null) {
         error('The env ' . $name . ' does not exist');
     }
-    
+
     return $v;
 }
 

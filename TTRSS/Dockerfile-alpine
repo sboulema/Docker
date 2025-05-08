@@ -3,7 +3,7 @@ FROM alpine
 LABEL maintainer="sboulema@gmail.com"
 
 # https://pkgs.alpinelinux.org/packages?name=php*
-ARG PHP_VERSION=83
+ARG PHP_VERSION=84
 
 # install tools
 RUN apk add --update --no-cache \
@@ -66,7 +66,7 @@ RUN chown nobody:nginx -R /var/www && \
     chmod -R 777 ${TTRSS_CACHE_DIR}/feed-icons && \
     chmod -R 777 ${TTRSS_ICONS_DIR} && \
     chmod -R 777 ${TTRSS_LOCK_DIRECTORY}
-    
+
 # https://stackoverflow.com/questions/74843987/git-2-34-1-dubious-ownership-error-not-fixed-by-safe-directory
 RUN sudo git config --system --add safe.directory /var/www
 
