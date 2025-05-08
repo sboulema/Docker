@@ -36,7 +36,7 @@ if (!empty($eport)) {
 }
 
 // database credentials for this instance
-//   database name (DB_NAME) can be supplied or detaults to "ttrss"
+//   database name (DB_NAME) can be supplied or defaults to "ttrss"
 //   database user (DB_USER) can be supplied or defaults to database name
 //   database pass (DB_PASS) can be supplied or defaults to database user
 $config['TTRSS_DB_NAME'] = env('TTRSS_DB_NAME', 'ttrss');
@@ -58,7 +58,6 @@ if (!dbcheck($config)) {
     $pdo = dbconnect($super);
 
     $pdo->exec('CREATE ROLE ' . ($config['TTRSS_DB_USER']) . ' WITH LOGIN PASSWORD ' . $pdo->quote($config['TTRSS_DB_PASS']));
-    $pdo->exec('GRANT CREATE ON SCHEMA public TO ' . ($config['TTRSS_DB_USER']));
     $pdo->exec('CREATE DATABASE ' . ($config['TTRSS_DB_NAME']) . ' WITH OWNER ' . ($config['TTRSS_DB_USER']));
 
     unset($pdo);
