@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - 'feature/**'
+  workflow_dispatch:
 
 env:
   version: '1.0.${{ github.run_number }}'
