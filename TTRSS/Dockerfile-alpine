@@ -36,14 +36,16 @@ WORKDIR /var/www
 RUN rm -rf *
 RUN git clone https://gitlab.tt-rss.org/tt-rss/tt-rss.git --depth=1 .
 
-# install first-party ttrss plugins
-RUN git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-close-button.git plugins/close_button && \
-    git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-favicon-unread.git plugins/favicon_unread && \
-    git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-no-url-hashes.git plugins/no_url_hashes
+# First install third-party plugins, then first-party plugins, so that we do not trigger a HTTP 429 from the initial clone
 
 # install third-party ttrss plugins
 RUN git clone https://github.com/sboulema/tt-rss-one-click-mark.git plugins.local/one_click_mark && \
     git clone https://github.com/VerifiedJoseph/ttrss-plugin-gotify plugins.local/gotify_notifications
+
+# install first-party ttrss plugins
+RUN git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-close-button.git plugins/close_button && \
+    git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-favicon-unread.git plugins/favicon_unread && \
+    git clone https://gitlab.tt-rss.org/tt-rss/plugins/ttrss-no-url-hashes.git plugins/no_url_hashes
 
 # set default settings
 ENV TTRSS_DB_NAME="ttrss"
